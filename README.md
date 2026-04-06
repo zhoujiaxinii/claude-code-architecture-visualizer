@@ -22,15 +22,16 @@
 
 - 🎨 **科技黑底色 + 彩色节点**：美观的可视化界面
 - 🖱️ **交互式流程图**：拖动节点、缩放查看、小地图导航
-- 📋 **详细信息展示**：鼠标悬停显示节点功能和技术细节
+- 📋 **详细信息展示**：鼠标悬停显示节点功能、技术细节和相关代码文件
+- ✨ **平滑动画过渡**：所有交互都有流畅的动画效果
 - 📱 **响应式设计**：支持桌面和移动设备
-- 🚀 **零成本部署**：可直接部署到 GitHub Pages
+- 🚀 **自动部署**：推送到 GitHub 后自动部署到 GitHub Pages
 
 ---
 
 ## 🎯 在线演示
 
-👉 [点击查看在线演示](https://YOUR_USERNAME.github.io/claude-code-architecture-visualizer)
+👉 [点击查看在线演示](https://zhoujiaxinii.github.io/claude-code-architecture-visualizer/)
 
 ---
 
@@ -90,63 +91,48 @@ npm run build
 
 ## 🚀 部署到 GitHub Pages
 
-### 方法一：手动部署
+### 自动部署（推荐）
 
-1. Fork 这个仓库
-2. 修改 `vite.config.ts` 中的 `base` 配置：
-   ```ts
-   base: '/你的仓库名/'
-   ```
-3. 构建项目：
-   ```bash
-   pnpm build
-   ```
-4. 将 `dist` 目录内容推送到 `gh-pages` 分支
+本项目已配置 GitHub Actions，推送代码后会自动部署。
 
-### 方法二：使用 GitHub Actions
+1. 点击仓库的 **Settings** → **Pages**
+2. 在 **Source** 下选择 **GitHub Actions**
+3. 推送代码到 `main` 分支，等待自动部署完成
 
-在仓库中创建 `.github/workflows/deploy.yml`：
+### 手动部署
 
-```yaml
-name: Deploy to GitHub Pages
+如果需要手动部署，可以使用以下步骤：
 
-on:
-  push:
-    branches: [main]
+```bash
+# 构建
+pnpm build
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-          
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: 'pnpm'
-          
-      - run: pnpm install
-      - run: pnpm build
-      
-      - uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+# 将 dist 目录内容推送到 gh-pages 分支
 ```
 
 ---
 
-## 📹 视频脚本
+## 📊 流程图节点说明
 
-本项目的配套视频脚本已包含在 `VIDEO_SCRIPT.md` 文件中，内容包括：
+### 节点交互
 
-- Claude Code 源码泄露事件讲解
-- 架构可视化项目的演示解说
-- 录制建议和时间规划
+- **鼠标悬停**：显示节点详细信息（功能描述、核心特性、技术细节、相关代码文件）
+- **点击节点**：固定显示信息面板
+- **拖动节点**：可自由重新排列节点位置
+- **滚轮缩放**：支持鼠标滚轮或触控板缩放
+- **小地图**：右下角显示整体缩略图，可快速定位
+
+### 颜色说明
+
+| 颜色 | 类别 | 说明 |
+|------|------|------|
+| 🔴 珊瑚红 | 核心 | CLI入口、Agent循环等核心组件 |
+| 🟢 青绿 | 工具 | 40+ 内置工具 |
+| 🔵 天蓝 | 服务 | API、Dream、LSP等服务 |
+| 🟢 薄荷绿 | 特殊模式 | BUDDY、KAIROS、ULTRAPLAN等 |
+| 🟡 金黄 | 安全 | 权限系统、受保护文件 |
+| 🩷 粉红 | 隐藏功能 | 功能门控、Beta功能 |
+| 🟣 紫色 | 系统 | 模型迁移、遥测等 |
 
 ---
 
@@ -161,12 +147,6 @@ jobs:
 ## 📄 许可证
 
 本项目采用 MIT 许可证。
-
----
-
-## 🤝 贡献
-
-欢迎提交 Issue 和 Pull Request！
 
 ---
 
