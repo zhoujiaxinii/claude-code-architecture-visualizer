@@ -211,6 +211,8 @@ body {
   min-height: 70vh;
   background: var(--bg-primary);
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ========== 信息面板 ========== */
