@@ -529,57 +529,52 @@ export const architectureEdges: ArchitectureEdge[] = [
   { id: 'e28', source: 'service-api', target: 'system-migrations' },
 ];
 
-// 节点布局位置（自动计算后会调整）
-export const getNodePositions = (width: number, _height: number) => {
-  const centerX = width / 2;
-  
-  // 定义每个节点的相对位置
-  const positions: Record<string, { x: number; y: number }> = {
-    // 入口层 (顶部)
-    'cli-entry': { x: centerX, y: 50 },
-    'react-terminal': { x: centerX - 200, y: 150 },
-    
-    // 核心引擎
-    'agent-loop': { x: centerX, y: 200 },
-    'query-engine': { x: centerX + 200, y: 200 },
-    
-    // 工具层 (左侧)
-    'tools-core': { x: 200, y: 350 },
-    'tool-bash': { x: 50, y: 480 },
-    'tool-file': { x: 150, y: 480 },
-    'tool-web': { x: 250, y: 480 },
-    'tool-agent': { x: 50, y: 560 },
-    'tool-task': { x: 150, y: 560 },
-    'tool-mcp': { x: 250, y: 560 },
-    
-    // 服务层 (右侧)
-    'service-api': { x: centerX + 300, y: 350 },
-    'service-autodream': { x: centerX + 200, y: 480 },
-    'service-lsp': { x: centerX + 350, y: 480 },
-    'service-voice': { x: centerX + 500, y: 480 },
-    
-    // 特殊模式 (中间)
-    'mode-buddy': { x: 100, y: 700 },
-    'mode-kairos': { x: 250, y: 700 },
-    'mode-ultraplan': { x: 400, y: 700 },
-    'mode-bridge': { x: 550, y: 700 },
-    'mode-coordinator': { x: 700, y: 700 },
-    
-    // 安全系统 (上方)
-    'security-permissions': { x: centerX - 100, y: 100 },
-    'security-protected': { x: centerX + 100, y: 100 },
-    'security-undercover': { x: centerX, y: 100 },
-    
-    // 隐藏功能 (右侧)
-    'hidden-features': { x: centerX + 500, y: 200 },
-    'hidden-betas': { x: centerX + 500, y: 300 },
-    'hidden-computer-use': { x: centerX + 500, y: 400 },
-    
-    // 系统组件 (底部)
-    'system-migrations': { x: 850, y: 700 },
-    'system-telemetry': { x: 950, y: 700 },
-    'system-attestation': { x: 1050, y: 700 },
+// 节点布局位置 - 手动精确排版，确保无重叠
+export const getNodePositions = (): Record<string, { x: number; y: number }> => {
+  return {
+    // ========== 第一层：入口 (y=0) ==========
+    'cli-entry':            { x: 500, y: 0 },
+
+    // ========== 第二层：渲染 + 安全 (y=120) ==========
+    'react-terminal':       { x: 250, y: 120 },
+    'security-undercover':  { x: 750, y: 120 },
+
+    // ========== 第三层：核心引擎 (y=260) ==========
+    'agent-loop':           { x: 350, y: 260 },
+    'query-engine':         { x: 600, y: 260 },
+    'hidden-features':      { x: 900, y: 260 },
+
+    // ========== 第四层：权限 + API (y=400) ==========
+    'security-permissions': { x: 100, y: 400 },
+    'tools-core':           { x: 300, y: 400 },
+    'service-api':          { x: 550, y: 400 },
+    'hidden-betas':         { x: 900, y: 400 },
+
+    // ========== 第五层：具体工具 + 服务 (y=550) ==========
+    'tool-bash':            { x: 0,   y: 550 },
+    'tool-file':            { x: 160, y: 550 },
+    'security-protected':   { x: 320, y: 550 },
+    'tool-web':             { x: 480, y: 550 },
+    'service-autodream':    { x: 640, y: 550 },
+    'service-lsp':          { x: 800, y: 550 },
+    'hidden-computer-use':  { x: 960, y: 550 },
+
+    // ========== 第六层：更多工具 + 服务 (y=700) ==========
+    'tool-agent':           { x: 80,  y: 700 },
+    'tool-task':            { x: 280, y: 700 },
+    'tool-mcp':             { x: 480, y: 700 },
+    'service-voice':        { x: 700, y: 700 },
+    'system-telemetry':     { x: 960, y: 700 },
+
+    // ========== 第七层：特殊模式 (y=860) ==========
+    'mode-buddy':           { x: 50,  y: 860 },
+    'mode-kairos':          { x: 230, y: 860 },
+    'mode-coordinator':      { x: 410, y: 860 },
+
+    // ========== 第八层：更多特殊模式 + 系统 (y=1000) ==========
+    'mode-ultraplan':       { x: 150, y: 1000 },
+    'mode-bridge':          { x: 370, y: 1000 },
+    'system-migrations':    { x: 620, y: 1000 },
+    'system-attestation':   { x: 840, y: 1000 },
   };
-  
-  return positions;
 };

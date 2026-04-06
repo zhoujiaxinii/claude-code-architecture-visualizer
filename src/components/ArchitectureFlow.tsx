@@ -8,12 +8,13 @@ import ReactFlow, {
   Controls,
   MiniMap,
   NodeProps,
+  Handle,
+  Position,
   MarkerType,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { architectureNodes, architectureEdges, getNodePositions, ArchitectureNode as ArchNode } from '../data/architectureData';
 
-// 自定义节点组件
 const CustomNode: React.FC<NodeProps> = ({ data, selected }) => {
   const { label, color, coreFeatures } = data as ArchNode & { label: string; color: string; coreFeatures: string[] };
 
@@ -23,23 +24,24 @@ const CustomNode: React.FC<NodeProps> = ({ data, selected }) => {
         background: `linear-gradient(135deg, ${color}22, ${color}44)`,
         border: `2px solid ${color}`,
         borderRadius: '12px',
-        padding: '12px 16px',
-        minWidth: '120px',
+        padding: '14px 20px',
+        minWidth: '140px',
         textAlign: 'center',
-        boxShadow: selected ? `0 0 20px ${color}66` : `0 4px 15px ${color}33`,
+        boxShadow: selected ? `0 0 25px ${color}88` : `0 4px 15px ${color}33`,
         transition: 'all 0.3s ease',
         cursor: 'pointer',
       }}
-      className="custom-node"
     >
-      <div style={{ fontWeight: 700, color: color, fontSize: '14px' }}>
+      <Handle type="target" position={Position.Top} style={{ background: color, width: 10, height: 10, border: '2px solid #1a1a25' }} />
+      <div style={{ fontWeight: 700, color, fontSize: '14px', whiteSpace: 'nowrap' }}>
         {label}
       </div>
       {selected && (
         <div style={{ marginTop: '8px', fontSize: '11px', color: '#a0a0a0' }}>
-          {coreFeatures?.slice(0, 2).join(' • ')}
+          {coreFeatures?.slice(0, 2).join(' · ')}
         </div>
       )}
+      <Handle type="source" position={Position.Bottom} style={{ background: color, width: 10, height: 10, border: '2px solid #1a1a25' }} />
     </div>
   );
 };
@@ -53,7 +55,7 @@ interface ArchitectureFlowProps {
 
 const ArchitectureFlow: React.FC<ArchitectureFlowProps> = ({ onNodeHover, onNodeClick }) => {
   const initialNodes: Node[] = useMemo(() => {
-    const positions = getNodePositions(1200, 800);
+    const positions = getNodePositions();
     return architectureNodes.map((node) => ({
       id: node.id,
       type: 'custom',
@@ -77,12 +79,17 @@ const ArchitectureFlow: React.FC<ArchitectureFlowProps> = ({ onNodeHover, onNode
       target: edge.target,
       label: edge.label,
       animated: edge.animated || false,
-      style: { stroke: '#4a4a6a', strokeWidth: 2 },
-      labelStyle: { fill: '#a0a0a0', fontSize: 11 },
-      labelBgStyle: { fill: '#1a1a25', fillOpacity: 0.8 },
+      type: 'smoothstep',
+      style: { stroke: '#5a5a8a', strokeWidth: 2 },
+      labelStyle: { fill: '#c0c0d0', fontSize: 11, fontWeight: 600 },
+      labelBgStyle: { fill: '#1a1a25', fillOpacity: 0.9 },
+      labelBgPadding: [8, 4] as [number, number],
+      labelBgBorderRadius: 4,
       markerEnd: {
         type: MarkerType.ArrowClosed,
-        color: '#4a4a6a',
+        color: '#5a5a8a',
+        width: 16,
+        height: 16,
       },
     }));
   }, []);
@@ -122,16 +129,22 @@ const ArchitectureFlow: React.FC<ArchitectureFlowProps> = ({ onNodeHover, onNode
         onNodeClick={onNodeClickHandler}
         nodeTypes={nodeTypes}
         fitView
-        fitViewOptions={{ padding: 0.2 }}
-        minZoom={0.2}
+        fitViewOptions={{ padding: 0.15 }}
+        minZoom={0.15}
         maxZoom={2}
+        proOptions={{ hideAttribution: true }}
       >
-        <Background color="#2a2a3a" gap={20} size={1} />
-        <Controls style={{ backgroundColor: '#1a1a25', borderRadius: '8px' }} />
+        <Background color="#1e1e30" gap={24} size={1} />
+        <Controls
+          showInteractive={false}
+          style={{ backgroundColor: '#1a1a25', borderRadius: '8px', border: '1px solid #2a2a3a' }}
+        />
         <MiniMap
           nodeColor={(node) => (node.data as { color: string }).color || '#4a4a6a'}
-          style={{ backgroundColor: '#12121a', borderRadius: '8px' }}
-          maskColor="rgba(10, 10, 15, 0.8)"
+          style={{ backgroundColor: '#12121a', borderRadius: '8px', border: '1px solid #2a2a3a' }}
+          maskColor="rgba(10, 10, 15, 0.85)"
+          zoomable
+          pannable
         />
       </ReactFlow>
     </div>
