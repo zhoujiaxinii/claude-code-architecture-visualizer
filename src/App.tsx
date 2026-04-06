@@ -16,7 +16,7 @@ const App: React.FC = () => {
   };
 
   // GitHub 仓库 URL（用户需要创建后替换）
-  const GITHUB_REPO_URL = 'https://github.com/YOUR_USERNAME/claude-code-architecture-visualizer';
+  const GITHUB_REPO_URL = 'https://github.com/zhoujiaxinii/claude-code-architecture-visualizer';
 
   // 源码泄露仓库 URL
   const SOURCE_REPO_URL = 'https://github.com/Ringmast4r/claw-cli-claude-code-source-code-v2.1.88';
@@ -51,7 +51,7 @@ const App: React.FC = () => {
 
       {/* Main Content */}
       <main className="main-content">
-        <div className="flow-container">
+        <div className="flow-container" style={{ height: 'calc(100vh - 200px)', minHeight: '500px' }}>
           <ArchitectureFlow
             onNodeHover={handleNodeHover}
             onNodeClick={handleNodeClick}

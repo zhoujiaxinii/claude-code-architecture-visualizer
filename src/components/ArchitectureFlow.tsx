@@ -16,7 +16,7 @@ import { architectureNodes, architectureEdges, getNodePositions, ArchitectureNod
 // 自定义节点组件
 const CustomNode: React.FC<NodeProps> = ({ data, selected }) => {
   const { label, color, coreFeatures } = data as ArchNode & { label: string; color: string; coreFeatures: string[] };
-  
+
   return (
     <div
       style={{
@@ -44,10 +44,7 @@ const CustomNode: React.FC<NodeProps> = ({ data, selected }) => {
   );
 };
 
-// 节点类型映射
-const nodeTypes = {
-  custom: CustomNode,
-};
+const nodeTypes = { custom: CustomNode };
 
 interface ArchitectureFlowProps {
   onNodeHover: (node: ArchNode | null) => void;
@@ -55,7 +52,6 @@ interface ArchitectureFlowProps {
 }
 
 const ArchitectureFlow: React.FC<ArchitectureFlowProps> = ({ onNodeHover, onNodeClick }) => {
-  // 初始化节点
   const initialNodes: Node[] = useMemo(() => {
     const positions = getNodePositions(1200, 800);
     return architectureNodes.map((node) => ({
@@ -69,11 +65,11 @@ const ArchitectureFlow: React.FC<ArchitectureFlowProps> = ({ onNodeHover, onNode
         coreFeatures: node.coreFeatures,
         technicalDetails: node.technicalDetails,
         category: node.category,
+        relatedFiles: node.relatedFiles,
       },
     }));
   }, []);
 
-  // 初始化边
   const initialEdges: Edge[] = useMemo(() => {
     return architectureEdges.map((edge) => ({
       id: edge.id,
@@ -94,13 +90,10 @@ const ArchitectureFlow: React.FC<ArchitectureFlowProps> = ({ onNodeHover, onNode
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, , onEdgesChange] = useEdgesState(initialEdges);
 
-  // 鼠标悬停处理
   const onNodeMouseEnter = useCallback(
     (_event: React.MouseEvent, node: Node) => {
       const archNode = architectureNodes.find((n) => n.id === node.id);
-      if (archNode) {
-        onNodeHover(archNode);
-      }
+      if (archNode) onNodeHover(archNode);
     },
     [onNodeHover]
   );
@@ -109,13 +102,10 @@ const ArchitectureFlow: React.FC<ArchitectureFlowProps> = ({ onNodeHover, onNode
     onNodeHover(null);
   }, [onNodeHover]);
 
-  // 点击处理
   const onNodeClickHandler = useCallback(
     (_event: React.MouseEvent, node: Node) => {
       const archNode = architectureNodes.find((n) => n.id === node.id);
-      if (archNode) {
-        onNodeClick(archNode);
-      }
+      if (archNode) onNodeClick(archNode);
     },
     [onNodeClick]
   );
@@ -133,23 +123,14 @@ const ArchitectureFlow: React.FC<ArchitectureFlowProps> = ({ onNodeHover, onNode
         nodeTypes={nodeTypes}
         fitView
         fitViewOptions={{ padding: 0.2 }}
-        minZoom={0.3}
+        minZoom={0.2}
         maxZoom={2}
-        defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
       >
         <Background color="#2a2a3a" gap={20} size={1} />
-        <Controls
-          style={{
-            backgroundColor: '#1a1a25',
-            borderRadius: '8px',
-          }}
-        />
+        <Controls style={{ backgroundColor: '#1a1a25', borderRadius: '8px' }} />
         <MiniMap
           nodeColor={(node) => (node.data as { color: string }).color || '#4a4a6a'}
-          style={{
-            backgroundColor: '#12121a',
-            borderRadius: '8px',
-          }}
+          style={{ backgroundColor: '#12121a', borderRadius: '8px' }}
           maskColor="rgba(10, 10, 15, 0.8)"
         />
       </ReactFlow>
