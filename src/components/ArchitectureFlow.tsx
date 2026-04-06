@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import ReactFlow, {
   Node,
   Edge,
@@ -84,6 +84,16 @@ interface ArchitectureFlowProps {
 
 const ArchitectureFlow: React.FC<ArchitectureFlowProps> = ({ onNodeHover, onNodeClick }) => {
   const positions = getNodePositions();
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+
+  const isConnectedToSelected = useCallback(
+    (edgeId: string) => {
+      if (!selectedNodeId) return false;
+      const edge = architectureEdges.find((e) => e.id === edgeId);
+      return !!edge && (edge.source === selectedNodeId || edge.target === selectedNodeId);
+    },
+    [selectedNodeId]
+  );
 
   const initialNodes: Node[] = useMemo(() => {
     // 业务节点
@@ -136,26 +146,32 @@ const ArchitectureFlow: React.FC<ArchitectureFlowProps> = ({ onNodeHover, onNode
   }, []);
 
   const initialEdges: Edge[] = useMemo(() => {
-    return architectureEdges.map((edge) => ({
-      id: edge.id,
-      source: edge.source,
-      target: edge.target,
-      label: edge.label,
-      animated: edge.animated || false,
-      type: 'smoothstep',
-      style: { stroke: '#5a5a8a', strokeWidth: 2 },
-      labelStyle: { fill: '#c0c0d0', fontSize: 11, fontWeight: 600 },
-      labelBgStyle: { fill: '#1a1a25', fillOpacity: 0.9 },
-      labelBgPadding: [8, 4] as [number, number],
-      labelBgBorderRadius: 4,
-      markerEnd: {
-        type: MarkerType.ArrowClosed,
-        color: '#5a5a8a',
-        width: 16,
-        height: 16,
-      },
-    }));
-  }, []);
+    return architectureEdges.map((edge) => {
+      const highlight = isConnectedToSelected(edge.id);
+      return {
+        id: edge.id,
+        source: edge.source,
+        target: edge.target,
+        label: edge.label,
+        animated: edge.animated || false,
+        type: 'smoothstep' as const,
+        className: highlight ? 'react-flow__edge--highlighted' : undefined,
+        style: highlight
+          ? { stroke: '#ff4757', strokeWidth: 3 }
+          : { stroke: '#5a5a8a', strokeWidth: 2 },
+        labelStyle: { fill: '#c0c0d0', fontSize: 11, fontWeight: 600 },
+        labelBgStyle: { fill: '#1a1a25', fillOpacity: 0.9 },
+        labelBgPadding: [8, 4] as [number, number],
+        labelBgBorderRadius: 4,
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+          color: highlight ? '#ff4757' : '#5a5a8a',
+          width: 16,
+          height: 16,
+        },
+      };
+    });
+  }, [selectedNodeId, isConnectedToSelected]);
 
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, , onEdgesChange] = useEdgesState(initialEdges);
@@ -174,11 +190,16 @@ const ArchitectureFlow: React.FC<ArchitectureFlowProps> = ({ onNodeHover, onNode
 
   const onNodeClickHandler = useCallback(
     (_event: React.MouseEvent, node: Node) => {
+      setSelectedNodeId(node.id);
       const archNode = architectureNodes.find((n) => n.id === node.id);
       if (archNode) onNodeClick(archNode);
     },
     [onNodeClick]
   );
+
+  const onPaneClickHandler = useCallback(() => {
+    setSelectedNodeId(null);
+  }, []);
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
@@ -190,6 +211,7 @@ const ArchitectureFlow: React.FC<ArchitectureFlowProps> = ({ onNodeHover, onNode
         onNodeMouseEnter={onNodeMouseEnter}
         onNodeMouseLeave={onNodeMouseLeave}
         onNodeClick={onNodeClickHandler}
+        onPaneClick={onPaneClickHandler}
         nodeTypes={nodeTypes}
         fitView
         fitViewOptions={{ padding: 0.15 }}
