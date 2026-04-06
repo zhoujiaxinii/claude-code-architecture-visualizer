@@ -547,25 +547,28 @@ export const getNodePositions = (): Record<string, { x: number; y: number }> => 
     'mode-ultraplan':       { x: 680, y: 680 },
     'mode-bridge':          { x: 850, y: 680 },
 
-    // ===== Row 4 (y=920)：具体实现（11个） =====
-    'tool-bash':            { x: 0,   y: 920 },
-    'tool-file':            { x: 120, y: 920 },
-    'tool-web':             { x: 240, y: 920 },
-    'tool-agent':           { x: 370, y: 920 },
-    'tool-task':            { x: 500, y: 920 },
-    'tool-mcp':             { x: 630, y: 920 },
-    'mode-coordinator':      { x: 760, y: 920 },
-    'security-permissions': { x: 890, y: 920 },
-    'service-autodream':    { x: 1020, y: 920 },
-    'service-lsp':          { x: 1140, y: 920 },
-    'service-voice':        { x: 1260, y: 920 },
+    // ===== Row 4 (y=920)：具体实现（11个，间距175px） =====
+    'tool-bash':            { x: 0,    y: 920 },
+    'tool-file':            { x: 175,  y: 920 },
+    'tool-web':             { x: 350,  y: 920 },
+    'tool-agent':           { x: 525,  y: 920 },
+    'tool-task':            { x: 700,  y: 920 },
+    'tool-mcp':             { x: 875,  y: 920 },
+    'mode-coordinator':      { x: 1050, y: 920 },
+    'security-permissions': { x: 1225, y: 920 },
+    'service-autodream':    { x: 1400, y: 920 },
+    'service-lsp':          { x: 1575, y: 920 },
+    'service-voice':        { x: 1750, y: 920 },
 
-    // ===== Row 5 (y=1160)：底层模块（6个） =====
-    'security-protected':   { x: 890, y: 1160 },
-    'hidden-betas':         { x: 0,   y: 1160 },
-    'hidden-computer-use':  { x: 170, y: 1160 },
-    'system-telemetry':     { x: 370, y: 1160 },
-    'system-migrations':    { x: 570, y: 1160 },
-    'system-attestation':   { x: 770, y: 1160 },
+    // ===== Row 5 (y=1180)：底层模块（分组排列） =====
+    // 隐藏功能组（被粉色虚线框包裹）
+    'hidden-betas':         { x: 30,   y: 1180 },
+    'hidden-computer-use':  { x: 250,  y: 1180 },
+    // 系统组件组（被紫色虚线框包裹）
+    'system-telemetry':     { x: 540,  y: 1180 },
+    'system-migrations':    { x: 760,  y: 1180 },
+    'system-attestation':   { x: 980,  y: 1180 },
+    // 安全子模块
+    'security-protected':   { x: 1260, y: 1180 },
   };
 };
