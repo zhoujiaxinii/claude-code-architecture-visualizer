@@ -1,0 +1,533 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-card: #1a1a25;
+  --bg-card-hover: #22222f;
+  --text-primary: #e0e0e0;
+  --text-secondary: #a0a0a0;
+  --accent-1: #ff6b6b;
+  --accent-2: #4ecdc4;
+  --accent-3: #45b7d1;
+  --accent-4: #96ceb4;
+  --accent-5: #ffeaa7;
+  --accent-6: #dfe6e9;
+  --accent-7: #fd79a8;
+  --accent-8: #6c5ce7;
+  --border-color: #2a2a3a;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.6);
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+body {
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ========== 动画关键帧 ========== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px currentColor;
+  }
+  50% {
+    box-shadow: 0 0 20px currentColor, 0 0 30px currentColor;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ========== 应用容器 ========== */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  animation: fadeIn 0.5s ease;
+}
+
+/* ========== 头部 ========== */
+.header {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  padding: 20px 40px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  animation: slideInUp 0.6s ease;
+}
+
+.header-left h1 {
+  font-size: 1.8rem;
+  background: linear-gradient(135deg, var(--accent-2), var(--accent-3));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 5px;
+  animation: shimmer 3s ease-in-out infinite;
+  background-size: 200% 100%;
+}
+
+.header-left p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.header-right {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+/* ========== 按钮 ========== */
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-7));
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(255, 107, 107, 0.4);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, var(--accent-2), var(--accent-4));
+  color: var(--bg-primary);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(78, 205, 196, 0.4);
+}
+
+.btn-accent {
+  background: linear-gradient(135deg, var(--accent-8), var(--accent-3));
+  color: white;
+}
+
+.btn-accent:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(108, 92, 231, 0.4);
+}
+
+/* ========== 主内容 ========== */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.flow-container {
+  flex: 1;
+  min-height: 70vh;
+  background: var(--bg-primary);
+  position: relative;
+}
+
+/* ========== 信息面板 ========== */
+.info-panel {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(145deg, var(--bg-card), var(--bg-card-hover));
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 420px;
+  max-height: 70vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  opacity: 0;
+  transform: translateX(30px) scale(0.95);
+  pointer-events: none;
+  transition: all var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+.info-panel.visible {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  pointer-events: auto;
+}
+
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.info-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.info-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.info-title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  animation: slideInRight 0.4s ease;
+}
+
+.info-category-tag {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid;
+  white-space: nowrap;
+  animation: slideInRight 0.5s ease;
+  animation-delay: 0.1s;
+  animation-fill-mode: backwards;
+}
+
+.info-description {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  animation: slideInUp 0.4s ease;
+  animation-delay: 0.15s;
+  animation-fill-mode: backwards;
+}
+
+.info-section {
+  margin-bottom: 18px;
+  animation: slideInUp 0.4s ease;
+}
+
+.info-section:nth-child(3) { animation-delay: 0.2s; animation-fill-mode: backwards; }
+.info-section:nth-child(4) { animation-delay: 0.25s; animation-fill-mode: backwards; }
+.info-section:nth-child(5) { animation-delay: 0.3s; animation-fill-mode: backwards; }
+
+.info-section-title {
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.info-feature-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.info-feature-item {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+  line-height: 1.5;
+  position: relative;
+  padding-left: 8px;
+}
+
+.info-feature-item::before {
+  content: '•';
+  position: absolute;
+  left: -12px;
+  color: var(--accent-5);
+}
+
+.info-tech-details {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.info-files-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.info-file-tag {
+  display: inline-block;
+  padding: 6px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: var(--accent-6);
+  font-family: 'Fira Code', 'Consolas', monospace;
+  transition: all var(--transition-fast);
+  cursor: default;
+}
+
+.info-file-tag:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-7);
+  color: var(--accent-7);
+  transform: translateY(-2px);
+}
+
+/* ========== 图例 ========== */
+.legend {
+  background: var(--bg-secondary);
+  padding: 20px 40px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  animation: slideInUp 0.6s ease;
+  animation-delay: 0.3s;
+  animation-fill-mode: backwards;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.legend-item:hover {
+  transform: scale(1.05);
+}
+
+.legend-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  transition: all var(--transition-fast);
+}
+
+.legend-item:hover .legend-dot {
+  transform: scale(1.2);
+  box-shadow: 0 0 10px currentColor;
+}
+
+/* ========== 页脚 ========== */
+.footer {
+  background: var(--bg-secondary);
+  padding: 20px;
+  text-align: center;
+  border-top: 1px solid var(--border-color);
+}
+
+.footer p {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.footer a {
+  color: var(--accent-2);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.footer a:hover {
+  color: var(--accent-4);
+  text-decoration: underline;
+}
+
+/* ========== React Flow 自定义样式 ========== */
+.react-flow__node {
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  border: 2px solid transparent;
+  min-width: 150px;
+  text-align: center;
+}
+
+.react-flow__node:hover {
+  transform: scale(1.08);
+  z-index: 10;
+}
+
+.react-flow__node.selected {
+  border-color: var(--accent-5);
+  box-shadow: 0 0 30px rgba(255, 234, 167, 0.4);
+  animation: glow 2s ease-in-out infinite;
+}
+
+.react-flow__edge-path {
+  stroke-width: 2;
+  transition: stroke var(--transition-normal);
+}
+
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke-width: 3;
+}
+
+.react-flow__handle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transition: all var(--transition-fast);
+}
+
+.react-flow__handle:hover {
+  transform: scale(1.3);
+}
+
+/* ========== 滚动条 ========== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+  transition: background var(--transition-fast);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-8);
+}
+
+/* ========== 响应式设计 ========== */
+@media (max-width: 768px) {
+  .header {
+    padding: 15px 20px;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .header-left h1 {
+    font-size: 1.4rem;
+  }
+
+  .btn {
+    padding: 10px 18px;
+    font-size: 0.85rem;
+  }
+
+  .info-panel {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    max-width: none;
+    max-height: 50vh;
+    padding: 16px;
+  }
+
+  .legend {
+    padding: 15px 20px;
+  }
+
+  .legend-item {
+    font-size: 0.75rem;
+  }
+}
+
+/* ========== 自定义节点样式 ========== */
+.custom-node {
+  transition: all var(--transition-normal);
+}
+
+.custom-node:hover {
+  animation: pulse 0.5s ease;
+}
