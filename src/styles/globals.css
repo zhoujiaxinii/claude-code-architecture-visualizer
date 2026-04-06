@@ -232,6 +232,7 @@ body {
   pointer-events: none;
   transition: all var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .info-panel.visible {
@@ -425,7 +426,8 @@ body {
 }
 
 /* ========== React Flow 自定义样式 ========== */
-.react-flow__node {
+/* 注意：排除分组节点，避免 Chrome 中布局崩溃 */
+.react-flow__node:not(.react-flow__node-group) {
   border-radius: 12px;
   padding: 15px;
   font-size: 14px;
@@ -437,12 +439,12 @@ body {
   text-align: center;
 }
 
-.react-flow__node:hover {
+.react-flow__node:not(.react-flow__node-group):hover {
   transform: scale(1.08);
   z-index: 10;
 }
 
-.react-flow__node.selected {
+.react-flow__node:not(.react-flow__node-group).selected {
   border-color: var(--accent-5);
   box-shadow: 0 0 30px rgba(255, 234, 167, 0.4);
   animation: glow 2s ease-in-out infinite;

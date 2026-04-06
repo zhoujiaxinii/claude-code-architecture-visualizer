@@ -190,7 +190,7 @@ const ArchitectureFlow: React.FC<ArchitectureFlowProps> = ({ onNodeHover, onNode
         };
       })
     );
-  }, [selectedNodeId, isConnectedToSelected, setEdges]);
+  }, [selectedNodeId, isConnectedToSelected]);
 
   const onNodeMouseEnter = useCallback(
     (_event: React.MouseEvent, node: Node) => {
