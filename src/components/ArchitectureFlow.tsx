@@ -218,8 +218,7 @@ const ArchitectureFlow: React.FC<ArchitectureFlowProps> = ({ onNodeHover, onNode
   }, []);
 
   return (
-    <div style={{ width: '100%', flex: 1, position: 'relative' }}>
-      <ReactFlow
+    <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
@@ -251,7 +250,6 @@ const ArchitectureFlow: React.FC<ArchitectureFlowProps> = ({ onNodeHover, onNode
           pannable
         />
       </ReactFlow>
-    </div>
   );
 };
 

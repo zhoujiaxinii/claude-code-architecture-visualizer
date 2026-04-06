@@ -430,6 +430,9 @@ body {
 /* ========== React Flow 自定义样式 ========== */
 /* 确保 ReactFlow 填满父容器（Chrome 兼容） */
 .react-flow {
+  position: absolute !important;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
 }
