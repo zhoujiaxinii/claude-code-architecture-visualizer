@@ -428,6 +428,12 @@ body {
 }
 
 /* ========== React Flow 自定义样式 ========== */
+/* 确保 ReactFlow 填满父容器（Chrome 兼容） */
+.react-flow {
+  width: 100%;
+  height: 100%;
+}
+
 /* 注意：排除分组节点，避免 Chrome 中布局崩溃 */
 .react-flow__node:not(.react-flow__node-group) {
   border-radius: 12px;
