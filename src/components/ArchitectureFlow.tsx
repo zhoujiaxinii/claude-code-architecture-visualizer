@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ReactFlow, {
   Node,
   Edge,
@@ -146,35 +146,51 @@ const ArchitectureFlow: React.FC<ArchitectureFlowProps> = ({ onNodeHover, onNode
   }, []);
 
   const initialEdges: Edge[] = useMemo(() => {
-    return architectureEdges.map((edge) => {
-      const highlight = isConnectedToSelected(edge.id);
-      return {
-        id: edge.id,
-        source: edge.source,
-        target: edge.target,
-        label: edge.label,
-        animated: edge.animated || false,
-        type: 'smoothstep' as const,
-        className: highlight ? 'react-flow__edge--highlighted' : undefined,
-        style: highlight
-          ? { stroke: '#ff4757', strokeWidth: 3 }
-          : { stroke: '#5a5a8a', strokeWidth: 2 },
-        labelStyle: { fill: '#c0c0d0', fontSize: 11, fontWeight: 600 },
-        labelBgStyle: { fill: '#1a1a25', fillOpacity: 0.9 },
-        labelBgPadding: [8, 4] as [number, number],
-        labelBgBorderRadius: 4,
-        markerEnd: {
-          type: MarkerType.ArrowClosed,
-          color: highlight ? '#ff4757' : '#5a5a8a',
-          width: 16,
-          height: 16,
-        },
-      };
-    });
-  }, [selectedNodeId, isConnectedToSelected]);
+    return architectureEdges.map((edge) => ({
+      id: edge.id,
+      source: edge.source,
+      target: edge.target,
+      label: edge.label,
+      animated: edge.animated || false,
+      type: 'smoothstep' as const,
+      style: { stroke: '#5a5a8a', strokeWidth: 2 },
+      labelStyle: { fill: '#c0c0d0', fontSize: 11, fontWeight: 600 },
+      labelBgStyle: { fill: '#1a1a25', fillOpacity: 0.9 },
+      labelBgPadding: [8, 4] as [number, number],
+      labelBgBorderRadius: 4,
+      markerEnd: {
+        type: MarkerType.ArrowClosed,
+        color: '#5a5a8a',
+        width: 16,
+        height: 16,
+      },
+    }));
+  }, []);
 
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
-  const [edges, , onEdgesChange] = useEdgesState(initialEdges);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  // 选中节点变化时，动态更新边的高亮样式
+  useEffect(() => {
+    setEdges((eds) =>
+      eds.map((edge) => {
+        const highlight = isConnectedToSelected(edge.id);
+        return {
+          ...edge,
+          className: highlight ? 'react-flow__edge--highlighted' : undefined,
+          style: highlight
+            ? { stroke: '#ff4757', strokeWidth: 3 }
+            : { stroke: '#5a5a8a', strokeWidth: 2 },
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            color: highlight ? '#ff4757' : '#5a5a8a',
+            width: 16,
+            height: 16,
+          },
+        };
+      })
+    );
+  }, [selectedNodeId, isConnectedToSelected, setEdges]);
 
   const onNodeMouseEnter = useCallback(
     (_event: React.MouseEvent, node: Node) => {
