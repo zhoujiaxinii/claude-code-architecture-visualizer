@@ -563,12 +563,12 @@ export const getNodePositions = (): Record<string, { x: number; y: number }> => 
     // ===== Row 5 (y=1180)：底层模块（分组排列） =====
     // 隐藏功能组（被粉色虚线框包裹）
     'hidden-betas':         { x: 30,   y: 1180 },
-    'hidden-computer-use':  { x: 250,  y: 1180 },
+    'hidden-computer-use':  { x: 260,  y: 1180 },
     // 系统组件组（被紫色虚线框包裹）
-    'system-telemetry':     { x: 540,  y: 1180 },
-    'system-migrations':    { x: 760,  y: 1180 },
-    'system-attestation':   { x: 980,  y: 1180 },
+    'system-telemetry':     { x: 640,  y: 1180 },
+    'system-migrations':    { x: 870,  y: 1180 },
+    'system-attestation':   { x: 1100, y: 1180 },
     // 安全子模块
-    'security-protected':   { x: 1260, y: 1180 },
+    'security-protected':   { x: 1380, y: 1180 },
   };
 };

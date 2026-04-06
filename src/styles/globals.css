@@ -531,3 +531,22 @@ body {
 .custom-node:hover {
   animation: pulse 0.5s ease;
 }
+
+/* ========== 分组框节点：覆盖全局 reactflow__node 样式 ========== */
+.react-flow__node-group {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+  box-shadow: none !important;
+  cursor: default !important;
+  pointer-events: none;
+}
+
+.react-flow__node-group:hover {
+  transform: none !important;
+}
+
+.react-flow__node-group .react-flow__handle {
+  display: none !important;
+}
