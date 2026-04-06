@@ -484,97 +484,88 @@ export const architectureNodes: ArchitectureNode[] = [
   },
 ];
 
-// 连接边
+// 连接边 — 严格分层，仅连接相邻行，零穿越
 export const architectureEdges: ArchitectureEdge[] = [
-  // 入口连接
-  { id: 'e1', source: 'cli-entry', target: 'react-terminal', animated: true },
-  { id: 'e2', source: 'cli-entry', target: 'agent-loop' },
-  { id: 'e3', source: 'agent-loop', target: 'query-engine' },
-  
-  // Agent 核心 -> 工具
-  { id: 'e4', source: 'agent-loop', target: 'tools-core', label: '调用' },
-  { id: 'e5', source: 'tools-core', target: 'tool-bash' },
-  { id: 'e6', source: 'tools-core', target: 'tool-file' },
-  { id: 'e7', source: 'tools-core', target: 'tool-web' },
-  { id: 'e8', source: 'tools-core', target: 'tool-agent' },
-  { id: 'e9', source: 'tools-core', target: 'tool-task' },
-  { id: 'e10', source: 'tools-core', target: 'tool-mcp' },
-  
-  // Agent 核心 -> 服务
-  { id: 'e11', source: 'agent-loop', target: 'service-api', label: 'API' },
-  { id: 'e12', source: 'agent-loop', target: 'service-autodream', label: 'Dream' },
-  { id: 'e13', source: 'agent-loop', target: 'service-lsp' },
-  { id: 'e14', source: 'agent-loop', target: 'service-voice' },
-  
-  // 特殊模式连接
-  { id: 'e15', source: 'agent-loop', target: 'mode-buddy', label: 'BUDDY' },
-  { id: 'e16', source: 'agent-loop', target: 'mode-kairos', label: 'KAIROS' },
-  { id: 'e17', source: 'agent-loop', target: 'mode-ultraplan', label: 'ULTRAPLAN' },
-  { id: 'e18', source: 'agent-loop', target: 'mode-bridge', label: 'Bridge' },
-  { id: 'e19', source: 'agent-loop', target: 'mode-coordinator', label: '协调' },
-  
-  // 安全系统连接
-  { id: 'e20', source: 'tools-core', target: 'security-permissions', label: '权限检查' },
-  { id: 'e21', source: 'tool-file', target: 'security-protected' },
-  { id: 'e22', source: 'agent-loop', target: 'security-undercover' },
-  
-  // 隐藏功能
-  { id: 'e23', source: 'cli-entry', target: 'hidden-features', label: '门控' },
-  { id: 'e24', source: 'service-api', target: 'hidden-betas' },
-  { id: 'e25', source: 'tools-core', target: 'hidden-computer-use' },
-  
-  // 系统组件
-  { id: 'e26', source: 'agent-loop', target: 'system-telemetry' },
-  { id: 'e27', source: 'service-api', target: 'system-attestation' },
-  { id: 'e28', source: 'service-api', target: 'system-migrations' },
+  // Row 0 → Row 1：入口分发
+  { id: 'e1', source: 'cli-entry', target: 'react-terminal' },
+  { id: 'e2', source: 'cli-entry', target: 'hidden-features' },
+  { id: 'e3', source: 'cli-entry', target: 'security-undercover' },
+
+  // Row 1 → Row 2：汇聚到核心
+  { id: 'e4', source: 'react-terminal', target: 'agent-loop' },
+  { id: 'e5', source: 'hidden-features', target: 'agent-loop' },
+  { id: 'e6', source: 'security-undercover', target: 'agent-loop' },
+
+  // Row 2 内部
+  { id: 'e7', source: 'agent-loop', target: 'query-engine' },
+
+  // Row 2 → Row 3：功能分发（6条扇出）
+  { id: 'e8', source: 'agent-loop', target: 'tools-core' },
+  { id: 'e9', source: 'agent-loop', target: 'mode-buddy' },
+  { id: 'e10', source: 'agent-loop', target: 'service-api' },
+  { id: 'e11', source: 'agent-loop', target: 'mode-kairos' },
+  { id: 'e12', source: 'agent-loop', target: 'mode-ultraplan' },
+  { id: 'e13', source: 'agent-loop', target: 'mode-bridge' },
+
+  // Row 3 → Row 4：工具注册扇出7条 + BUDDY→Coordinator + API服务扇出3条
+  { id: 'e14', source: 'tools-core', target: 'tool-bash' },
+  { id: 'e15', source: 'tools-core', target: 'tool-file' },
+  { id: 'e16', source: 'tools-core', target: 'tool-web' },
+  { id: 'e17', source: 'tools-core', target: 'tool-agent' },
+  { id: 'e18', source: 'tools-core', target: 'tool-task' },
+  { id: 'e19', source: 'tools-core', target: 'tool-mcp' },
+  { id: 'e20', source: 'tools-core', target: 'security-permissions' },
+  { id: 'e21', source: 'mode-buddy', target: 'mode-coordinator' },
+  { id: 'e22', source: 'service-api', target: 'service-autodream' },
+  { id: 'e23', source: 'service-api', target: 'service-lsp' },
+  { id: 'e24', source: 'service-api', target: 'service-voice' },
+
+  // Row 4 → Row 5
+  { id: 'e25', source: 'security-permissions', target: 'security-protected' },
 ];
 
-// 节点布局位置 - 手动精确排版，确保无重叠
+// 6层严格分层布局 — 每条边仅连接相邻行，线段绝不穿越任何节点
 export const getNodePositions = (): Record<string, { x: number; y: number }> => {
   return {
-    // ========== 第一层：入口 (y=0) ==========
-    'cli-entry':            { x: 500, y: 0 },
+    // ===== Row 0 (y=0)：入口 =====
+    'cli-entry':            { x: 550, y: 0 },
 
-    // ========== 第二层：渲染 + 安全 (y=120) ==========
-    'react-terminal':       { x: 250, y: 120 },
-    'security-undercover':  { x: 750, y: 120 },
+    // ===== Row 1 (y=220)：入口分发 =====
+    'react-terminal':       { x: 200, y: 220 },
+    'hidden-features':      { x: 550, y: 220 },
+    'security-undercover':  { x: 900, y: 220 },
 
-    // ========== 第三层：核心引擎 (y=260) ==========
-    'agent-loop':           { x: 350, y: 260 },
-    'query-engine':         { x: 600, y: 260 },
-    'hidden-features':      { x: 900, y: 260 },
+    // ===== Row 2 (y=440)：核心引擎 =====
+    'agent-loop':           { x: 400, y: 440 },
+    'query-engine':         { x: 750, y: 440 },
 
-    // ========== 第四层：权限 + API (y=400) ==========
-    'security-permissions': { x: 100, y: 400 },
-    'tools-core':           { x: 300, y: 400 },
-    'service-api':          { x: 550, y: 400 },
-    'hidden-betas':         { x: 900, y: 400 },
+    // ===== Row 3 (y=680)：功能分发（6个） =====
+    'tools-core':           { x: 0,   y: 680 },
+    'mode-buddy':           { x: 170, y: 680 },
+    'service-api':          { x: 340, y: 680 },
+    'mode-kairos':          { x: 510, y: 680 },
+    'mode-ultraplan':       { x: 680, y: 680 },
+    'mode-bridge':          { x: 850, y: 680 },
 
-    // ========== 第五层：具体工具 + 服务 (y=550) ==========
-    'tool-bash':            { x: 0,   y: 550 },
-    'tool-file':            { x: 160, y: 550 },
-    'security-protected':   { x: 320, y: 550 },
-    'tool-web':             { x: 480, y: 550 },
-    'service-autodream':    { x: 640, y: 550 },
-    'service-lsp':          { x: 800, y: 550 },
-    'hidden-computer-use':  { x: 960, y: 550 },
+    // ===== Row 4 (y=920)：具体实现（11个） =====
+    'tool-bash':            { x: 0,   y: 920 },
+    'tool-file':            { x: 120, y: 920 },
+    'tool-web':             { x: 240, y: 920 },
+    'tool-agent':           { x: 370, y: 920 },
+    'tool-task':            { x: 500, y: 920 },
+    'tool-mcp':             { x: 630, y: 920 },
+    'mode-coordinator':      { x: 760, y: 920 },
+    'security-permissions': { x: 890, y: 920 },
+    'service-autodream':    { x: 1020, y: 920 },
+    'service-lsp':          { x: 1140, y: 920 },
+    'service-voice':        { x: 1260, y: 920 },
 
-    // ========== 第六层：更多工具 + 服务 (y=700) ==========
-    'tool-agent':           { x: 80,  y: 700 },
-    'tool-task':            { x: 280, y: 700 },
-    'tool-mcp':             { x: 480, y: 700 },
-    'service-voice':        { x: 700, y: 700 },
-    'system-telemetry':     { x: 960, y: 700 },
-
-    // ========== 第七层：特殊模式 (y=860) ==========
-    'mode-buddy':           { x: 50,  y: 860 },
-    'mode-kairos':          { x: 230, y: 860 },
-    'mode-coordinator':      { x: 410, y: 860 },
-
-    // ========== 第八层：更多特殊模式 + 系统 (y=1000) ==========
-    'mode-ultraplan':       { x: 150, y: 1000 },
-    'mode-bridge':          { x: 370, y: 1000 },
-    'system-migrations':    { x: 620, y: 1000 },
-    'system-attestation':   { x: 840, y: 1000 },
+    // ===== Row 5 (y=1160)：底层模块（6个） =====
+    'security-protected':   { x: 890, y: 1160 },
+    'hidden-betas':         { x: 0,   y: 1160 },
+    'hidden-computer-use':  { x: 170, y: 1160 },
+    'system-telemetry':     { x: 370, y: 1160 },
+    'system-migrations':    { x: 570, y: 1160 },
+    'system-attestation':   { x: 770, y: 1160 },
   };
 };
